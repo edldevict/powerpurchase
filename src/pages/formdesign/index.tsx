@@ -57,7 +57,14 @@ export default function MultiColumnForm() {
   const [number, setNumber] = useState<number>(0)
   const [text, setText] = useState<string>('')
   const [numFields, setNumFields] = useState(24);
+  const [fieldValue, setFieldValue] = useState(0);
   const [values, setValues] = useState([...Array(numFields)].map(() => ''));
+  const handleFieldChange = (event: { target: { value: string } }) => {
+    const value = parseInt(event.target.value) || 0;
+    setFieldValue(value);
+  };
+
+  const totalValue = numFields * fieldValue;
 
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value)
@@ -159,36 +166,49 @@ export default function MultiColumnForm() {
                 ))}
               </div> */}
 
-               <div>
-        {[...Array(numFields)].map((_, i) => (
-          <TextField
-            variant='filled'
-            label='Unit'
-            key={i}
-            id={`outlined-number-${i}`}
-            type='number'
-            size='small'
-            InputLabelProps={{
-              shrink: true
-            }}
-            inputProps={{
-              min: 0
-            }}
-            value={value}
-            onChange={handleChangew}
-            sx={{ marginBottom: theme.spacing(1), textAlign: 'center' }}
-          />
-        ))}
-        <div>
-        <Icon baseClassName="fas" className="fa-plus-circle" color="primary" />
-          <Button variant="contained" onClick={handleAddField}>Add Field</Button>
-          <Button variant="contained" onClick={handleRemoveField}>Remove Field</Button>
-        </div>
-      </div>
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+  <div style={{ marginRight: '16px' }}>
+    {[...Array(numFields)].map((_, i) => (
+      <TextField
+        variant='filled'
+        label='Unit'
+        key={i}
+        id={`outlined-number-${i}`}
+        type='number'
+        size='small'
+        InputLabelProps={{
+          shrink: true
+        }}
+        inputProps={{
+          min: 0
+        }}
+        value={fieldValue}
+        onChange={handleFieldChange}
+        sx={{ marginBottom: theme.spacing(1), textAlign: 'center' }}
+      />
+    ))}
+    <div>
+      <Icon baseClassName="fas" className="fa-plus-circle" color="primary" />
+      <Button variant="contained" onClick={handleAddField}>Add Field</Button>
+      <Button variant="contained" onClick={handleRemoveField}>Remove Field</Button>
+    </div>
+  </div>
+
+</div>
 
 
             </Grid>
 
+<Grid item xs={12} md={4}>
+  <Typography variant='h6' sx={{ fontWeight: 'bold', marginBottom: theme.spacing(1), textAlign: 'center' }}>
+    Total value
+  </Typography>
+  <div>
+    <Typography variant='subtitle1' sx={{ textAlign: 'center' }}>
+      {totalValue}
+    </Typography>
+  </div>
+</Grid>
 
             <Grid item xs={12} sm={4} md={4}>
               <Typography

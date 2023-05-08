@@ -7,7 +7,8 @@ export type ThemeColor = 'primary' | 'secondary' | 'error' | 'warning' | 'info' 
 
 export type NavLink = {
 
-  children?: (NavGroup | NavLink)[]
+  submenuItems?: (NavGroup | NavLink)[]
+  hasSubmenu?:boolean
   path?: string
   title: string
   action?: string
@@ -51,7 +52,8 @@ type NavGroup = {
   action?: string
   subject?: string
   badgeContent?: string
-  children?: (NavGroup | NavLink)[]
+  hasSubmenu: boolean
+  submenuItems?: (NavGroup | NavLink)[]
   icon?: string | string[] | ReactNode
   badgeColor?: 'default' | 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info'
 }

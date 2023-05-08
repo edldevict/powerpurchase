@@ -1,3 +1,5 @@
+/* eslint-disable lines-around-comment */
+/* eslint-disable @typescript-eslint/no-unused-vars */
   // ** Icon imports
   import Login from 'mdi-material-ui/Login'
   import Table from 'mdi-material-ui/Table'
@@ -9,6 +11,12 @@
   import AccountPlusOutline from 'mdi-material-ui/AccountPlusOutline'
   import AlertCircleOutline from 'mdi-material-ui/AlertCircleOutline'
   import GoogleCirclesExtended from 'mdi-material-ui/GoogleCirclesExtended'
+  import { FaBolt } from 'react-icons/fa';
+  import { FaClipboardList } from 'react-icons/fa';
+  import { FaClipboard } from 'react-icons/fa';
+  import { FaDatabase } from 'react-icons/fa'
+  
+
 
   // ** Type import
   import { VerticalNavItemsType } from 'src/@core/layouts/types'
@@ -34,49 +42,79 @@
         path: '/'
       },
 
+     
       {
-        sectionTitle: 'Operation document'
-      },
-      {
-        title: 'Login',
-        icon: Login,
-
-
-        children:[
+        title: 'Manage data ',
+        icon: FaDatabase,
+        
+        hasSubmenu:true,
+        submenuItems:[
           {
-            title: 'Login',
-        icon: Login,
-        path: '/pages/login',
-          }
+            title:'Electric-dam',
+            path:'/test3',
+            icon: FaBolt,
+          },
+          {
+            title: 'Unit',
+            icon:FaClipboard,
+            path: '/test4',
+    
+    
+          },
         ]
+
+        
       },
       {
-        title: 'num ou',
-        icon: Login,
+        title: 'Declaration/dispatch',
+        icon: GoogleCirclesExtended,
+        hasSubmenu:true,
+        
+        submenuItems:[
+          {
+            title:'ff',
+            path:'/test3',
+            icon:FaClipboard,
+          },
+          {
+            title: 'Daily report',
+            icon:FaClipboard,
+            path: '/test4',
+    
+    
+          },
+        ]
+
+      },
+
+      {
+        sectionTitle: 'Home'
+        
+      },
+      {
+        title: 'Overview',
+        icon: HomeOutline,
+        path:'/overview'
+
+        
+      },
+      {
+        title: 'Declaration/dispatch',
+        icon: GoogleCirclesExtended,
         path: '/test3',
 
       },
       {
-        title: 'powerpurchase',
-        icon: Login,
+        title: 'Summary',
+        icon: FaClipboardList,
         path: '/test2',
 
       },
-      {
-        title: 'Components5',
-        icon: 'mdi:archive-outline',
-        children:[
-          {
-            title:'components',
-            path:'/test2'
-          }
-        ]
-
-      },
+    
 
       {
-        title: 'numnguemee',
-        icon: Login,
+        title: 'Daily report',
+        icon:FaClipboard,
         path: '/test4',
 
 
@@ -88,12 +126,12 @@
 
 
       },
-      // {
-      //   title: 'Register',
-      //   icon: AccountPlusOutline,
-      //   path: '/pages/register',
-      //   openInNewTab: true
-      // },
+      {
+        title: 'Register',
+        icon: AccountPlusOutline,
+        path: '/pages/register',
+        openInNewTab: true
+      },
       {
         title: 'Error',
         icon: AlertCircleOutline,
@@ -132,4 +170,4 @@
     ]
   }
 
-  export default navigation
+  export default navigation;

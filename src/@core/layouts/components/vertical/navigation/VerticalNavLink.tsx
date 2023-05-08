@@ -1,5 +1,7 @@
-// ** React Imports
-import { ElementType, ReactNode,useState } from 'react'
+/* eslint-disable @typescript-eslint/no-empty-function */
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { ElementType, ReactNode, useState } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -13,6 +15,9 @@ import Typography from '@mui/material/Typography'
 import Box, { BoxProps } from '@mui/material/Box'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemButton, { ListItemButtonProps } from '@mui/material/ListItemButton'
+import Collapse from '@mui/material/Collapse'
+import List from '@mui/material/List'
+import { ExpandLess, ExpandMore } from '@mui/icons-material'
 
 // ** Configs Import
 import themeConfig from 'src/configs/themeConfig'
@@ -26,14 +31,7 @@ import UserIcon from 'src/layouts/components/UserIcon'
 
 // ** Utils
 import { handleURLQueries } from 'src/@core/layouts/utils'
-import { List } from '@mui/material'
 
-interface Props {
-  item: NavLink
-  settings: Settings
-  navVisible?: boolean
-  toggleNavVisibility: () => void
-}
 interface NavLink {
   title: string
   path?: string
@@ -41,11 +39,19 @@ interface NavLink {
   badgeContent?: string
   openInNewTab?: boolean
   disabled?: boolean
-  hasSubmenu?: boolean // new property
-  submenuItems?: NavLink[] // new property
+  hasSubmenu?: boolean
+  submenuItems?: NavLink[]
+}
+
+interface Props {
+  item: NavLink
+  settings: Settings
+  navVisible?: boolean
+  toggleNavVisibility: () => void
 }
 
 // ** Styled Components
+
 const MenuNavLink = styled(ListItemButton)<
   ListItemButtonProps & { component?: ElementType; target?: '_blank' | undefined }
 >(({ theme }) => ({
@@ -56,10 +62,8 @@ const MenuNavLink = styled(ListItemButton)<
   padding: theme.spacing(2.25, 3.5),
   transition: 'opacity .25s ease-in-out',
   '&.active, &.active:hover': {
-
-    backgroundImage:'linear-gradient(45deg, #2196f3 30%, #1976d2 90%)'
-  },
-
+    backgroundImage: 'linear-gradient(45deg, #2196f3 30%, #1976d2 90%)'
+  }
 }))
 
 const MenuItemTextMetaWrapper = styled(Box)<BoxProps>({
@@ -71,17 +75,36 @@ const MenuItemTextMetaWrapper = styled(Box)<BoxProps>({
   ...(themeConfig.menuTextTruncate && { overflow: 'hidden' })
 })
 
+const SubMenuWrapper = styled(ListItem)<BoxProps>({
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  transition: 'opacity .25s ease-in-out',
+  '&.active, &.active:hover': {
+    background: '#f5f5f5',
+    color: ''
+  },
+})
 
+const SubMenu = ({ submenuItems, isOpen, handleToggle }: { submenuItems: NavLink[], isOpen: boolean, handleToggle: () => void }) => {
+  return (
+    <Collapse in={isOpen} timeout="auto" unmountOnExit >
+      <List component="div" disablePadding style={{color:'white'}}>
+        {submenuItems.map((subItem, index) => (
+          <VerticalNavLink key={index} item={subItem} navVisible={true} toggleNavVisibility={() => { } } settings={{
+            mode: 'light',
+            themeColor: 'primary',
+            contentWidth: 'full'
+          }} />
+        ))}
+      </List>
+    </Collapse>
+  )
+}
 
 const VerticalNavLink = ({ item, navVisible, toggleNavVisibility }: Props) => {
   // ** Hooks
-
-
-
-  function handleClick() {
-    setIsOpen(!open)
-  }
-
 
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter()
@@ -95,64 +118,70 @@ const VerticalNavLink = ({ item, navVisible, toggleNavVisibility }: Props) => {
       return false
     }
   }
-  const toggleSubMenu = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    e.preventDefault();
-    setIsOpen(!isOpen);
-  };
-
-
-
+  
+  const toggleSubMenu = () => {
+    setIsOpen(!isOpen)
+  }
+  
   return (
-    <ListItem
-      disablePadding
-      className='nav-link'
-      disabled={item.disabled || false}
-      sx={{ mt: 1.5, px: '0 !important' }}
-    >
-      <Link passHref href={item.path === undefined ? '/' : `${item.path}`}>
-        <MenuNavLink
-          component={'a'}
-          className={isNavLinkActive() ? 'active' : ''}
-          {...(item.openInNewTab ? { target: '_blank' } : null)}
-          onClick={e => {
-            if (item.path === undefined) {
-              e.preventDefault()
-              e.stopPropagation()
-            }
-            if (navVisible) {
-              toggleNavVisibility()
-            }
-          }}
-          sx={{
-            pl: 5.5,
-            ...(item.disabled ? { pointerEvents: 'none' } : { cursor: 'pointer' })
-          }}
-        >
-          <ListItemIcon
-           style={{color: 'white'}}
-          >
-            <UserIcon icon={IconTag} />
-          </ListItemIcon>
+    
+<div>
+  <ListItem disablePadding className="nav-link" disabled={item.disabled || false}>
+    <Link passHref href={item.path === undefined ? "/" : `${item.path}`}>
+      <MenuNavLink
+        component="a"
+        className={isNavLinkActive() ? "active" : ""}
+        {...(item.openInNewTab ? { target: "_blank" } : null)}
+        onClick={(e) => {
+          if (item.path === undefined) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          if (navVisible) {
+            toggleNavVisibility();
+          }
+          if (item.hasSubmenu) {
+            toggleSubMenu();
+          }
+        }}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          pl: 3.5,
+          pr: 2.5,
+          py: 1.5,
+          ...(item.disabled ? { pointerEvents: "none" } : { cursor: "pointer" }),
+          "&:hover": {
+            bgcolor: "primary.main",
+            borderRadius: "8px"
+          }
+        }}
+      >
+       <ListItemIcon sx={{ color: 'white', minWidth: 'unset', mr:2  }}>
+  <UserIcon icon={IconTag}  />
+</ListItemIcon>
+<Typography variant="body2" sx={{ color: 'white', flex: 1,ml:2 }}>
+  {item.title}
+</Typography>
+        {item.badgeContent && (
+          <Chip
+            label={item.badgeContent}
+            style={{ color: "white", marginLeft: 1.25 }}
+            sx={{
+              height: 20,
+              fontWeight: 500,
+              bgcolor: "secondary.main",
+              "& .MuiChip-label": { px: 1.5, textTransform: "capitalize" },
+            }}
+          />
+        )}
+        {item.hasSubmenu && (isOpen ? <ExpandLess sx={{ color: "white" }} /> : <ExpandMore  sx={{ color: "white" }} />)}
+      </MenuNavLink>
+    </Link>
+  </ListItem>
+  {item.hasSubmenu && <SubMenu submenuItems={item.submenuItems || []} isOpen={isOpen} handleToggle={toggleSubMenu} />}
+</div>
 
-          <MenuItemTextMetaWrapper>
-            <Typography style={{color:'white'}}>{item.title}</Typography>
-            {item.badgeContent ? (
-              <Chip
-                label={item.badgeContent}
-               style={{color:'white'}}
-                sx={{
-                  height: 20,
-                  fontWeight: 500,
-                  marginLeft: 1.25,
-                  '& .MuiChip-label': { px: 1.5, textTransform: 'capitalize' }
-                }}
-              />
-            ) : null}
-          </MenuItemTextMetaWrapper>
-        </MenuNavLink>
-      </Link>
-
-    </ListItem>
   )
 }
 
